@@ -1,5 +1,4 @@
-# nohup Rscript R-DINA-JAGS-Sim.R | tee R-DINA-log.txt
-# nohup Rscript R-DINA-JAGS-Sim.R > log.txt 2&1&
+# nohup Rscript R-DINA-JAGS-SIM.R | tee R-DINA-log.txt
 
 library('devtools')
 install_github("drackham/CDADataSims", ref="develop") 
@@ -14,7 +13,7 @@ library('runjags')
 # setwd("/home/drackham")
 setwd("~/Desktop")
 
-data <- rDINASimpleQ(10)
+data <- rDINASimpleQ(500)
 save(data, file="R-DINA-JAGS/RDINA-JAGS Simulated Data.RData")
 
 q <- simpleQ()
@@ -22,13 +21,13 @@ q <- simpleQ()
 generateRDINAJags()
 
 sim <- rDINAJagsSim(data, jagsModel="RDINA.jags",
-                   adaptSteps = 5, burnInSteps = 5, numSavedSteps = 5, thinSteps = 1)
+                   adaptSteps = 1000, burnInSteps = 1000, numSavedSteps = 5000, thinSteps = 1)
 save(sim, file = "R-DINA JAGS Sim.RData")
 
-oneChain <- combine.mcmc(sim)
+# oneChain <- combine.mcmc(sim)
 
-codaSamples = as.mcmc.list(oneChain) # resulting codaSamples object has these indices: codaSamples[[ chainIdx ]][ stepIdx , paramIdx ]
+# codaSamples = as.mcmc.list(oneChain) # resulting codaSamples object has these indices: codaSamples[[ chainIdx ]][ stepIdx , paramIdx ]
 
-S <- ggs(as.mcmc.list(sim))
-ggmcmc(S, file=paste("CDA/ConvergencePlots F.pdf", sep=""), plot=c("traceplot", "autocorrelation"), family="^f", param_page=1)
-ggmcmc(S, file=paste("CDA/ConvergencePlots D.pdf", sep=""), plot=c("traceplot", "autocorrelation"), family="^d", param_page=1)
+# S <- ggs(as.mcmc.list(sim))
+# ggmcmc(S, file=paste("CDA/ConvergencePlots F.pdf", sep=""), plot=c("traceplot", "autocorrelation"), family="^f", param_page=1)
+# ggmcmc(S, file=paste("CDA/ConvergencePlots D.pdf", sep=""), plot=c("traceplot", "autocorrelation"), family="^d", param_page=1)
