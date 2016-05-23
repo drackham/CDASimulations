@@ -11,8 +11,10 @@ library("rstan")
 rstan::rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
 
-# Load the simulated data
-data <- rDINASimpleQ(100)
+# Load and save the simulated data
+data <- rDINASimpleQ(500)
+save (data, file = "Simulated Data.R")
+
 # Load the Q-matrix
 q <- simpleQ()
 
@@ -26,7 +28,7 @@ ptm <- proc.time()
 print("Starting simulation...")
 
 # Run the simulation
-fit <- stanSim (data = data, q, wdLocal, 1, 20, 1)
+fit <- stanSim (data = data, q=q, wd=wdLocal, cores=3, iter=2000, chains=3)
 
 # Save the output
 save(fit, file="stanFit.R")

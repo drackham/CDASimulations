@@ -3,13 +3,11 @@ library('ggmcmc')
 library("shinystan")
 source("/Users/Dave/dev/EffectiveThetaBIN/Helpers/rootMeanSquaredDifference.R")
 
-setwd("")
-load("stanFit.R")
+# setwd("")
+load("rDINA500.R")
+load("Simulated Data.R")
 
 post <- extract(fit, permuted = TRUE) # return a list of arrays
-
-save(post, file="stanOut.R")
-
 
 my_sso <- launch_shinystan(fit)
 
