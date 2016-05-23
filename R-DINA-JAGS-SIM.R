@@ -10,8 +10,8 @@ library('ggmcmc')
 library('parallel')
 library('runjags')
 
-# setwd("/home/drackham")
-setwd("~/Desktop")
+setwd("/home/drackham")
+# setwd("~/Desktop")
 
 data <- rDINASimpleQ(500)
 save(data, file="R-DINA-JAGS/RDINA-JAGS Simulated Data.RData")
@@ -20,8 +20,9 @@ q <- simpleQ()
 
 generateRDINAJags()
 
-sim <- rDINAJagsSim(data, jagsModel="RDINA.jags",
-                   adaptSteps = 1000, burnInSteps = 1000, numSavedSteps = 5000, thinSteps = 1)
+sim <- rDINAJagsSim(data, jagsModel="RDINA.jags", maxCores = 4, adaptSteps = 1000, burnInSteps = 1000, 
+										numSavedSteps = 5000, thinSteps = 1)
+
 save(sim, file = "R-DINA JAGS Sim.RData")
 
 # oneChain <- combine.mcmc(sim)
