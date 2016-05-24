@@ -11,11 +11,11 @@ source("/Users/Dave/dev/EffectiveThetaBIN/Helpers/rootMeanSquaredDifference.R")
 # Load the data
 data("IRT_1PL.1000")
 
+print(fit)
+
 # Load the simulated parameter values
 thetaSim <- IRT_1PL.1000$theta
 betaSim <- IRT_1PL.1000$beta
-
-my_sso <- launch_shinystan(fit)
 
 post <- rstan::extract(fit, permuted = TRUE) # return a list of arrays
 
@@ -36,3 +36,5 @@ abline(a=0,b=1)
 rmsd <- rootMeanSquaredDifference(betaSim,betaHat)
 mean(rmsd)
 plot(density(rmsd)) 
+
+my_sso <- launch_shinystan(fit)

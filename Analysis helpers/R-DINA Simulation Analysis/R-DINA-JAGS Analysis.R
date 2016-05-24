@@ -54,3 +54,13 @@ abline(a=0,b=1)
 
 diff <- f[,1]+d[,1]
 plot(density(1-exp(diff)/(1+exp(diff))))
+
+
+# oneChain <- combine.mcmc(sim)
+
+# codaSamples = as.mcmc.list(oneChain) # resulting codaSamples object has these indices: codaSamples[[ chainIdx ]][ stepIdx , paramIdx ]
+
+# S <- ggs(as.mcmc.list(sim))
+# ggmcmc(S, file=paste("CDA/ConvergencePlots F.pdf", sep=""), plot=c("traceplot", "autocorrelation"), family="^f", param_page=1)
+# ggmcmc(S, file=paste("CDA/ConvergencePlots D.pdf", sep=""), plot=c("traceplot", "autocorrelation"), family="^d", param_page=1)
+
