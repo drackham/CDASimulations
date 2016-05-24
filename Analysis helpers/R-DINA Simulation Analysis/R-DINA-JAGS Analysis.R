@@ -8,11 +8,14 @@ library('ggmcmc')
 library('parallel')
 library('runjags')
 
-setwd("~/RDINA-100")
+setwd("~/Desktop/R-DINA-JAGS")
 
-load("Simulated Data.R")
-load("Simulated Q.R")
-load("Sim1.RData")
+load("~/Desktop/R-DINA-JAGS/R-DINA JAGS Sim.RData")
+load("~/Desktop/R-DINA-JAGS/Simulated-Data.RData")
+
+oneChain <- combine.mcmc(sim)
+
+codaSamples = as.mcmc.list(oneChain) # resulting codaSamples object has these indices: codaSamples[[ chainIdx ]][ stepIdx , paramIdx ]
 
 d <- extractCodaVariables(x=codaSamples, params='d', exact=FALSE)
 f <- extractCodaVariables(x=codaSamples, params='f', exact=FALSE)
@@ -44,7 +47,7 @@ plot(density(rmsd))
 
 # Simulated vs. Predicted alphaJK
 x <- alpha2[,1]
-y <- data$alphaJK[,2]
+y <- data$alphaIK[,2]
 
 plot(x,y,xlim=c(0, 1), ylim=c(0, 1))
 abline(a=0,b=1)
