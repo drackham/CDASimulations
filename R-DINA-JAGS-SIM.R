@@ -1,10 +1,9 @@
 # nohup Rscript R-DINA-JAGS-SIM.R | tee R-DINA-log.txt
 
 library('devtools')
-install_github("drackham/CDADataSims", ref="develop")
 install_github("drackham/CDASimStudies", ref="develop")
-library('CDADataSims')
 library('CDASimStudies')
+library('uuid')
 library('coda')
 library('ggmcmc')
 library('parallel')
@@ -13,21 +12,22 @@ library('runjags')
 # Set the simID
 simID <- UUIDgenerate()
 
-setwd("/home/drackham")
-# setwd("~/Desktop")
+# setwd("/home/drackham")
+setwd("~/Desktop")
 
-data <- rDINASimpleQ(500)
-save(data, file="R-DINA-JAGS/RDINA-JAGS-Simulated-Data.RData")
-
-q <- simpleQ()
+data(R_DINA_SimpleQ.1000)
 
 generateRDINAJagsNonHierachical()
+
+cores = min(4, parallel::detectCores()-1)
+iter = 5000
+chains = cores
 
 # Start the timer!
 ptm <- proc.time()
 
-sim <- rDINAJagsSim(data, jagsModel="RDINA.jags", maxCores = 4, adaptSteps = 1000, burnInSteps = 1000,
-										numSavedSteps = 5000, thinSteps = 1)
+sim <- rDINAJagsSim(R_DINA_SimpleQ.1000, jagsModel="RDINA.jags", maxCores = cores, adaptSteps = 500, burnInSteps = 500,
+										numSavedSteps = iter, thinSteps = 1)
 
 # Stop the timer...
 duration <- proc.time() - ptm
@@ -46,13 +46,4 @@ CDASimStudies.SHA1 <- unlist(strsplit(system("git ls-remote https://github.com/d
 simInfo <- data.frame(simID, simType, dateStarted, CDASimStudies.SHA1, dataSet, cores, iter, chains, totalTime)
 
 # Save the simInfo object
-write.table(simInfo, file = paste(simID, "-R-DINA Non-Hierarchical JAGS.txt", sep=""))
-
-
-# oneChain <- combine.mcmc(sim)
-
-# codaSamples = as.mcmc.list(oneChain) # resulting codaSamples object has these indices: codaSamples[[ chainIdx ]][ stepIdx , paramIdx ]
-
-# S <- ggs(as.mcmc.list(sim))
-# ggmcmc(S, file=paste("CDA/ConvergencePlots F.pdf", sep=""), plot=c("traceplot", "autocorrelation"), family="^f", param_page=1)
-# ggmcmc(S, file=paste("CDA/ConvergencePlots D.pdf", sep=""), plot=c("traceplot", "autocorrelation"), family="^d", param_page=1)
+write.table(simInfo, file = paste("R-DINA-JAGS/", simID, "-R-DINA Non-Hierarchical JAGS.txt", sep=""))
