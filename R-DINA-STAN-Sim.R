@@ -1,7 +1,9 @@
 # nohup Rscript R-DINA-STAN-Sim.R | tee R-DINA-log.txt
 
 library('devtools')
+install_github("drackham/dcmdata", ref="develop")
 install_github("drackham/dcms", ref="develop")
+library("dcmdata")
 library("dcms")
 library("rstan")
 library("uuid")
