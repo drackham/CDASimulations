@@ -23,9 +23,6 @@ wdRemote <- "/home/drackham/R-DINA-STAN"
 N <- 500
 data(paste("R_DINA_SimpleQ.", N, sep = ""))
 
-# Load the Q-matrix
-q <- simpleQ()
-
 # Specify which model to use
 model <- "R-DINA-Non-Logit.stan"
 
