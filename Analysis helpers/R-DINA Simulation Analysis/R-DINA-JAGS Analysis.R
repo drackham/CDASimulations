@@ -7,11 +7,15 @@ library('coda')
 library('ggmcmc')
 library('parallel')
 library('runjags')
+library('dcms')
 
-setwd("~/Desktop/R-DINA-JAGS")
+# setwd("~/Desktop/R-DINA-JAGS")
+# 
+# load("~/Desktop/R-DINA-JAGS/R-DINA JAGS Sim.RData")
+# load("~/Desktop/R-DINA-JAGS/Simulated-Data.RData")
 
-load("~/Desktop/R-DINA-JAGS/R-DINA JAGS Sim.RData")
-load("~/Desktop/R-DINA-JAGS/Simulated-Data.RData")
+# Load the data set
+data("R_DINA_SimpleQ.1000")
 
 oneChain <- combine.mcmc(sim)
 
@@ -23,20 +27,10 @@ f <- extractCodaVariables(x=codaSamples, params='f', exact=FALSE)
 alpha1 <- extractCodaVariables(x=codaSamples, params='alpha1', exact=FALSE)
 alpha2 <- extractCodaVariables(x=codaSamples, params='alpha2', exact=FALSE)
 
-plot(density(alpha1[1,]))
-
-# Simulated vs. Predicted f
-simF <- data$f
-
-plot(simF, f[,1], xlim=c(-10,0), ylim=c(-10,0))
-abline(a=0,b=1)
-
-rmsd <- rootMeanSquaredDifference(simF,f[,1])
-mean(rmsd) #0.1889619
-plot(density(rmsd))
+# plot(density(alpha1[1,]))
 
 # Simulated vs. Predicted d
-simD <- data$d
+simD <- R_DINA_SimpleQ.1000$d
 
 plot(simD, d[,1], xlim=c(0,12), ylim=c(0,12))
 abline(a=0,b=1)
@@ -45,9 +39,29 @@ rmsd <- rootMeanSquaredDifference(simD,d[,1])
 mean(rmsd) #0.3341923
 plot(density(rmsd))
 
-# Simulated vs. Predicted alphaJK
+stResidual <- standardizedResidual(simD, d[,1])
+mean(stResidual)
+plot(density(stResidual))
+quantile(stResidual,c(.025,.975))
+
+# Simulated vs. Predicted f
+simF <- R_DINA_SimpleQ.1000$f
+
+plot(simF, f[,1], xlim=c(-10,0), ylim=c(-10,0))
+abline(a=0,b=1)
+
+rmsd <- rootMeanSquaredDifference(simF,f[,1])
+mean(rmsd) #0.1889619
+plot(density(rmsd))
+
+stResidual <- standardizedResidual(simF, f[,1])
+mean(stResidual)
+plot(density(stResidual))
+quantile(stResidual,c(.025,.975))
+
+# Simulated vs. Predicted alphaIK
 x <- alpha2[,1]
-y <- data$alphaIK[,2]
+y <- R_DINA_SimpleQ.1000$alphaIK[,2]
 
 plot(x,y,xlim=c(0, 1), ylim=c(0, 1))
 abline(a=0,b=1)

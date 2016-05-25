@@ -1,8 +1,8 @@
 # nohup Rscript STAN-IRT-1PL-Sim.R | tee STAN-IRT-1PL-log.txt
 
 library('devtools')
-install_github("drackham/CDASimStudies", ref="develop")
-library("CDASimStudies")
+install_github("drackham/dcms", ref="develop")
+library("dcms")
 library("rstan")
 library("uuid")
 
@@ -13,8 +13,9 @@ simID <- UUIDgenerate()
 rstan::rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
 
-# Load and save the simulated data
-data("IRT_1PL.1000")
+# Load the simulated data
+N <- 100
+data(paste("IRT_1PL.", N, sep = ""))
 
 # Set working directories
 wdLocal <- "~/Desktop/IRT-1PL"
@@ -40,13 +41,13 @@ save(fit, file = paste(simID, "-stanFit.R", sep=""))
 
 #.......... Document the simulation ..............
 simType = "IRT 1-PL N = 1000"
-dataSet = "IRT_1PL.1000"
+dataSet = paste("IRT_1PL.", N, sep = "")
 dateStarted <- Sys.time()
 
 # Get the SHA1 that was used
-CDASimStudies.SHA1 <- unlist(strsplit(system("git ls-remote https://github.com/drackham/CDASimStudies develop", intern = TRUE), "\t"))[[1]] # Execute system command, split on \t unlist and keep only the SHA1
+dcms.SHA1 <- unlist(strsplit(system("git ls-remote https://github.com/drackham/dcms develop", intern = TRUE), "\t"))[[1]] # Execute system command, split on \t unlist and keep only the SHA1
 
-simInfo <- data.frame(simID, simType, dateStarted, CDASimStudies.SHA1, dataSet, cores, iter, chains, totalTime)
+simInfo <- data.frame(simID, simType, dateStarted, dcms.SHA1, dataSet, cores, iter, chains, totalTime)
 
 # Save the simInfo object
 write.table(simInfo, file = paste(simID, "-IRT-1PL-Info.csv", sep=","))

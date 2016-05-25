@@ -1,9 +1,9 @@
 library('dplyr')
 library('devtools')
-install_github("drackham/CDADataSims", ref="develop")
-install_github("drackham/CDASimStudies", ref="develop")
-library('CDADataSims')
-library('CDASimStudies')
+install_github("drackham/dcmdata", ref="develop")
+install_github("drackham/dcms", ref="develop")
+library('dcmdata')
+library('dcms')
 
 generateLatentClasses <- function(qmatrix){
 

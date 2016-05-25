@@ -1,8 +1,8 @@
 # nohup Rscript R-DINA-JAGS-SIM.R | tee R-DINA-log.txt
 
 library('devtools')
-install_github("drackham/CDASimStudies", ref="develop")
-library('CDASimStudies')
+install_github("drackham/dcms", ref="develop")
+library('dcms')
 library('uuid')
 library('coda')
 library('ggmcmc')
@@ -12,8 +12,8 @@ library('runjags')
 # Set the simID
 simID <- UUIDgenerate()
 
-# setwd("/home/drackham")
-setwd("~/Desktop")
+setwd("/home/drackham")
+# setwd("~/Desktop")
 
 data(R_DINA_SimpleQ.1000)
 
@@ -37,13 +37,13 @@ save(sim, file = paste("R-DINA-JAGS/", simID, "-Sim.RData", sep=""))
 
 #.......... Document the simulation ..............
 simType = "R-DINA Non-Hierarchical JAGS"
-dataSet = "R-DINA Simple Q 500"
+dataSet = "R-DINA Simple Q 1000"
 dateStarted <- Sys.time()
 
 # Get the SHA1 that was used
-CDASimStudies.SHA1 <- unlist(strsplit(system("git ls-remote https://github.com/drackham/CDASimStudies develop", intern = TRUE), "\t"))[[1]] # Execute system command, split on \t unlist and keep only the SHA1
+dcms.SHA1 <- unlist(strsplit(system("git ls-remote https://github.com/drackham/dcms develop", intern = TRUE), "\t"))[[1]] # Execute system command, split on \t unlist and keep only the SHA1
 
-simInfo <- data.frame(simID, simType, dateStarted, CDASimStudies.SHA1, dataSet, cores, iter, chains, totalTime)
+simInfo <- data.frame(simID, simType, dateStarted, dcms.SHA1, dataSet, cores, iter, chains, totalTime)
 
 # Save the simInfo object
 write.table(simInfo, file = paste("R-DINA-JAGS/", simID, "-R-DINA Non-Hierarchical JAGS.txt", sep=""))

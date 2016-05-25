@@ -1,26 +1,35 @@
 # nohup Rscript R-DINA-STAN-Sim.R | tee R-DINA-log.txt
 
 library('devtools')
-install_github("drackham/CDADataSims", ref="develop")
-install_github("drackham/CDASimStudies", ref="develop")
-library("CDADataSims")
-library("CDASimStudies")
+install_github("drackham/dcms", ref="develop")
+library("dcms")
 library("rstan")
+library("uuid")
+
+# Set the simID
+simID <- UUIDgenerate()
 
 # Configure RSTAN
 rstan::rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
 
+# Set working directories
+wdLocal <- "~/Desktop/R-DINA-STAN"
+wdRemote <- "/home/drackham/R-DINA-STAN"
+
 # Load and save the simulated data
-data <- rDINASimpleQ(500)
-save (data, file = "Simulated Data.R")
+N <- 500
+data(paste("R_DINA_SimpleQ.", N, sep = ""))
 
 # Load the Q-matrix
 q <- simpleQ()
 
-# Set working directories
-wdLocal <- "~/Desktop/RDINA"
-wdRemote <- "/home/drackham/RDINA-STAN"
+# Specify which model to use
+model <- "R-DINA-Non-Logit.stan"
+
+cores <- 4
+iter <- 6000
+chains <- 4
 
 # Start the timer!
 ptm <- proc.time()
@@ -28,12 +37,25 @@ ptm <- proc.time()
 print("Starting simulation...")
 
 # Run the simulation
-fit <- stanSim (data = data, q=q, wd=wdLocal, cores=3, iter=2000, chains=3)
-
-# Save the output
-save(fit, file="stanFit.R")
+fit <- stanSim (model = model, data = R_DINA_SimpleQ.100, q = q, wd = wdRemote, cores = cores, iter = iter, chains = chains)
 
 # Stop the timer...
 duration <- proc.time() - ptm
 duration
+totalTime <- as.numeric(duration[3])
 
+# Save the output
+save(fit, file = paste(simID, "-stanFit.R", sep=""))
+
+#.......... Document the simulation ..............
+simType = model
+dataSet = paste("R_DINA_SimpleQ.", N, sep = "")
+dateStarted <- Sys.time()
+
+# Get the SHA1 that was used
+dcms.SHA1 <- unlist(strsplit(system("git ls-remote https://github.com/drackham/dcms develop", intern = TRUE), "\t"))[[1]] # Execute system command, split on \t unlist and keep only the SHA1
+
+simInfo <- data.frame(simID, simType, dateStarted, dcms.SHA1, dataSet, cores, iter, chains, totalTime)
+
+# Save the simInfo object
+write.table(simInfo, file = paste(simID, "-R-DINA-STAN-Info.csv", sep=","))

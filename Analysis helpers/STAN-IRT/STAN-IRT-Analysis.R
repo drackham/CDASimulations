@@ -1,6 +1,6 @@
 library('devtools')
-install_github("drackham/CDASimStudies", ref="develop")
-library("CDASimStudies")
+install_github("drackham/dcms", ref="develop")
+library("dcms")
 library('ggmcmc')
 library('rstan')
 library("shinystan")
