@@ -20,15 +20,15 @@ wdLocal <- "~/Desktop/R-DINA-STAN"
 wdRemote <- "/home/drackham/R-DINA-STAN"
 
 # Load and save the simulated data
-N <- 500
-data(paste("R_DINA_SimpleQ.", N, sep = ""))
+N <- 100
+data(R_DINA_SimpleQ.100)
 
 # Specify which model to use
 model <- "R-DINA-Non-Logit.stan"
 
-cores <- 4
-iter <- 6000
-chains <- 4
+cores <- 2
+iter <- 1000
+chains <- 2
 
 # Start the timer!
 ptm <- proc.time()
@@ -36,7 +36,7 @@ ptm <- proc.time()
 print("Starting simulation...")
 
 # Run the simulation
-fit <- stanSim (model = model, data = R_DINA_SimpleQ.100, q = q, wd = wdRemote, cores = cores, iter = iter, chains = chains)
+fit <- stanSim (model = model, data = R_DINA_SimpleQ.100, wd = wdLocal, cores = cores, iter = iter, chains = chains)
 
 # Stop the timer...
 duration <- proc.time() - ptm
