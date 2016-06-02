@@ -36,7 +36,8 @@ ptm <- proc.time()
 print("Starting simulation...")
 
 # Run the simulation
-fit <- stanSim (model = model, data = R_DINA_SimpleQ.100, wd = wdLocal, cores = cores, iter = iter, chains = chains)
+fit <- stanSim (model = model, data = R_DINA_SimpleQ.500, wd = wdLocal,
+                cores = cores, iter = iter, chains = chains)
 
 # Stop the timer...
 duration <- proc.time() - ptm
