@@ -18,6 +18,9 @@ wdRemote <- "/home/drackham/R-DINA-JAGS"
 
 setwd(wdRemote)
 
+# Create simulation folder
+dir.create(simID)
+
 # Load and save the simulated data
 N <- 500
 data(R_DINA_SimpleQ_Flat.500)
@@ -29,21 +32,21 @@ generateRDINAJagsNonHierachical()
 # generateHO_R_DINA_Jags()
 
 cores = min(4, parallel::detectCores()-1)
-iter = 5000
+iter = 50
 chains = cores
 
 # Start the timer!
 ptm <- proc.time()
 
 sim <- rDINAJagsSim(R_DINA_SimpleQ_Flat.500, jagsModel = model, 
-                    maxCores = cores, adaptSteps = 1000, burnInSteps = 1000,
+                    maxCores = cores, adaptSteps = 10, burnInSteps = 10,
 										numSavedSteps = iter, thinSteps = 1)
 
 # Stop the timer...
 duration <- proc.time() - ptm
 totalTime <- as.numeric(duration[3])
 
-save(sim, file = paste(simID, "-Sim.RData", sep=""))
+save(sim, file = paste(simID, "/", simID, "-Sim.RData", sep=""))
 
 #.......... Document the simulation ..............
 simType = model
@@ -56,4 +59,4 @@ dcms.SHA1 <- unlist(strsplit(system("git ls-remote https://github.com/drackham/d
 simInfo <- data.frame(simID, simType, dateStarted, dcms.SHA1, dataSet, cores, iter, chains, totalTime)
 
 # Save the simInfo object
-write.table(simInfo, file = paste("simID, "-R-DINA Non-Hierarchical JAGS.txt", sep=""))
+write.table(simInfo, file = paste(simID, "/", simID, "-R-DINA Non-Hierarchical JAGS.txt", sep=""))
