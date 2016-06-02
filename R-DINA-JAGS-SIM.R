@@ -1,4 +1,4 @@
-# nohup Rscript R-DINA-JAGS-SIM.R | tee R-DINA-JAGS-log.txt
+# nohup Rscript R-DINA-JAGS-SIM.R | tee R-DINA-JAGS/R-DINA-JAGS-log.txt
 
 library('devtools')
 install_github("drackham/dcms", ref="develop")
@@ -32,15 +32,15 @@ generateRDINAJagsNonHierachical()
 # generateHO_R_DINA_Jags()
 
 cores = min(4, parallel::detectCores()-1)
-iter = 50
+iter = 20000
 chains = cores
 
 # Start the timer!
 ptm <- proc.time()
 
 sim <- rDINAJagsSim(R_DINA_SimpleQ_Flat.500, jagsModel = model, 
-                    maxCores = cores, adaptSteps = 10, burnInSteps = 10,
-										numSavedSteps = iter, thinSteps = 1)
+                    maxCores = cores, adaptSteps = 1000, burnInSteps = 1000,
+										numSavedSteps = iter, thinSteps = 4)
 
 # Stop the timer...
 duration <- proc.time() - ptm
