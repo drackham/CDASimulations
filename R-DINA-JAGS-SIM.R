@@ -1,4 +1,4 @@
-# nohup Rscript R-DINA-JAGS-SIM.R | tee R-DINA-log.txt
+# nohup Rscript R-DINA-JAGS-SIM.R | tee R-DINA-JAGS-log.txt
 
 library('devtools')
 install_github("drackham/dcms", ref="develop")
@@ -28,7 +28,7 @@ generateRDINAJagsNonHierachical()
 # generateRDINAJags()
 # generateHO_R_DINA_Jags()
 
-cores = min(1, parallel::detectCores()-1)
+cores = min(4, parallel::detectCores()-1)
 iter = 5000
 chains = cores
 
@@ -36,14 +36,14 @@ chains = cores
 ptm <- proc.time()
 
 sim <- rDINAJagsSim(R_DINA_SimpleQ_Flat.500, jagsModel = model, 
-                    maxCores = cores, adaptSteps = 500, burnInSteps = 500,
+                    maxCores = cores, adaptSteps = 1000, burnInSteps = 1000,
 										numSavedSteps = iter, thinSteps = 1)
 
 # Stop the timer...
 duration <- proc.time() - ptm
 totalTime <- as.numeric(duration[3])
 
-save(sim, file = paste("R-DINA-JAGS/", simID, "-Sim.RData", sep=""))
+save(sim, file = paste(simID, "-Sim.RData", sep=""))
 
 #.......... Document the simulation ..............
 simType = model
@@ -56,4 +56,4 @@ dcms.SHA1 <- unlist(strsplit(system("git ls-remote https://github.com/drackham/d
 simInfo <- data.frame(simID, simType, dateStarted, dcms.SHA1, dataSet, cores, iter, chains, totalTime)
 
 # Save the simInfo object
-write.table(simInfo, file = paste("R-DINA-JAGS/", simID, "-R-DINA Non-Hierarchical JAGS.txt", sep=""))
+write.table(simInfo, file = paste("simID, "-R-DINA Non-Hierarchical JAGS.txt", sep=""))
