@@ -12,12 +12,18 @@ library('runjags')
 # Set the simID
 simID <- UUIDgenerate()
 
-setwd("/home/drackham")
-# setwd("~/Desktop")
+# Set working directories
+wdLocal <- "~/Desktop/R-DINA-JAGS"
+wdRemote <- "/home/drackham/R-DINA-JAGS"
 
-# data(R_DINA_SimpleQ.500)
+setwd(wdRemote)
+
+# Load and save the simulated data
+N <- 500
 data(R_DINA_SimpleQ_Flat.500)
 
+# Specify which model to use
+model <- "R-DINA-Non-Hierarchical.jags"
 generateRDINAJagsNonHierachical()
 # generateRDINAJags()
 # generateHO_R_DINA_Jags()
@@ -29,7 +35,7 @@ chains = cores
 # Start the timer!
 ptm <- proc.time()
 
-sim <- rDINAJagsSim(R_DINA_SimpleQ_Flat.500, jagsModel="R-DINA-Non-Hierarchical.jags", 
+sim <- rDINAJagsSim(R_DINA_SimpleQ_Flat.500, jagsModel = model, 
                     maxCores = cores, adaptSteps = 500, burnInSteps = 500,
 										numSavedSteps = iter, thinSteps = 1)
 
@@ -40,8 +46,8 @@ totalTime <- as.numeric(duration[3])
 save(sim, file = paste("R-DINA-JAGS/", simID, "-Sim.RData", sep=""))
 
 #.......... Document the simulation ..............
-simType = "R-DINA Non-Hierarchical JAGS"
-dataSet = "R_DINA_SimpleQ_Flat.500"
+simType = model
+dataSet = paste("R_DINA_SimpleQ.", N, sep = "")
 dateStarted <- Sys.time()
 
 # Get the SHA1 that was used
