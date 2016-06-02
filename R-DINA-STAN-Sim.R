@@ -20,14 +20,14 @@ wdLocal <- "~/Desktop/R-DINA-STAN"
 wdRemote <- "/home/drackham/R-DINA-STAN"
 
 # Load and save the simulated data
-N <- 100
-data(R_DINA_SimpleQ.100)
+N <- 500
+data(R_DINA_SimpleQ.500)
 
 # Specify which model to use
 model <- "R-DINA-Non-Logit.stan"
 
 cores <- 2
-iter <- 1000
+iter <- 5000
 chains <- 2
 
 # Start the timer!
