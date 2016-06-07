@@ -1,4 +1,4 @@
-# nohup Rscript R-DINA-STAN-Sim.R | tee R-DINA-log.txt
+# nohup Rscript R-DINA-STAN-Sim.R | tee R-DINA-STAN-log.txt
 
 library('devtools')
 install_github("drackham/dcmdata", ref="develop")
@@ -19,16 +19,19 @@ options(mc.cores = parallel::detectCores())
 wdLocal <- "~/Desktop/R-DINA-STAN"
 wdRemote <- "/home/drackham/R-DINA-STAN"
 
+# Create simulation folder
+dir.create(paste("R-DINA-STAN/", simID, sep=""))
+
 # Load and save the simulated data
 N <- 500
-data(R_DINA_SimpleQ.500)
+data(R_DINA_SimpleQ_Flat.500)
 
 # Specify which model to use
 model <- "R-DINA-Non-Logit.stan"
 
 cores <- 2
 iter <- 5000
-chains <- 2
+chains <- cores
 
 # Start the timer!
 ptm <- proc.time()
@@ -36,7 +39,7 @@ ptm <- proc.time()
 print("Starting simulation...")
 
 # Run the simulation
-fit <- stanSim (model = model, data = R_DINA_SimpleQ.500, wd = wdLocal,
+fit <- stanSim (model = model, data = R_DINA_SimpleQ_Flat.500, wd = wdLocal,
                 cores = cores, iter = iter, chains = chains)
 
 # Stop the timer...
@@ -45,7 +48,7 @@ duration
 totalTime <- as.numeric(duration[3])
 
 # Save the output
-save(fit, file = paste(simID, "-stanFit.R", sep=""))
+save(fit, file = paste(simID, "/", simID, "-stanFit.R", sep=""))
 
 #.......... Document the simulation ..............
 simType = model
@@ -58,4 +61,4 @@ dcms.SHA1 <- unlist(strsplit(system("git ls-remote https://github.com/drackham/d
 simInfo <- data.frame(simID, simType, dateStarted, dcms.SHA1, dataSet, cores, iter, chains, totalTime)
 
 # Save the simInfo object
-write.table(simInfo, file = paste(simID, "-R-DINA-STAN-Info.csv", sep=","))
+write.table(simInfo, file = paste(simID, "/", simID, "-R-DINA-STAN-Info.csv", sep=""))

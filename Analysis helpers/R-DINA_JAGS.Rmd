@@ -1,4 +1,23 @@
-########### Analyze Output ##########
+---
+title: "R-DINA JAGS SimpleQ Analysis"
+params:
+  dataSet: R_DINA_SimpleQ.500
+  guuid: 0341f357-41d7-4bba-bd02-0278db9e7570
+  simulationDirectory: ~/Dropbox/Graduate/Dissertation/DCM Simulation Results/R-DINA/0341f357-41d7-4bba-bd02-0278db9e7570
+output:
+  html_document:
+    toc: yes
+  pdf_document:
+    toc: yes
+---
+
+```{r knitr_opts, include = FALSE}
+knitr::opts_chunk$set(tidy = TRUE, cache = TRUE)
+knitr::opts_knit$set(root.dir = params$simulationDirectory)
+```
+
+```{r, message=FALSE, warning=FALSE, results="hide", echo=FALSE}
+# Load R packages
 source("/Users/Dave/dev/EffectiveThetaBIN/Helpers/extractCodaVariables.R")
 library('coda')
 library('ggplot2')
@@ -6,23 +25,24 @@ library('ggmcmc')
 library('parallel')
 library('runjags')
 library('dcms')
+
+##############################################################################
+#                      Load the simulation                                   #
+##############################################################################
+load(paste(params$guuid, "-Sim.RData", sep=''))
+
 ##############################################################################
 #                         Load the data                                      #
 ##############################################################################
-data("R_DINA_SimpleQ_Flat.500") # needs to be specified by the simulation tracker...
-dSim <- R_DINA_SimpleQ_Flat.500$d
-fSim <- R_DINA_SimpleQ_Flat.500$f
-J <- R_DINA_SimpleQ_Flat.500$J
+# http://stackoverflow.com/questions/30951204/load-dataset-from-r-package-using-data-assign-it-directly-to-a-variable
+data <- (function(...)get(data(...,envir = new.env())))(list = params$dataSet) 
 
-alpha1Sim <- R_DINA_SimpleQ_Flat.500$alphaIK[,1]
-alpha2Sim <- R_DINA_SimpleQ_Flat.500$alphaIK[,2]
+dSim <- data$d
+fSim <- data$f
+J <- data$J
 
-##############################################################################
-#                             Summary                                        #
-##############################################################################
-
-# data-model fit
-dic <- runjags::extract(sim, what='dic')
+alpha1Sim <- data$alphaIK[,1]
+alpha2Sim <- data$alphaIK[,2]
 
 ##############################################################################
 #                         Transformations                                    #
@@ -33,41 +53,83 @@ codaList <- as.mcmc.list(sim)
 
 # Setup ggmcmc object
 S <- ggs(as.mcmc.list(sim))
+```
 
-##############################################################
-# 							Convergence diagnostics											 #
-##############################################################
+# Summary
+Simulation ID: `r params$guuid
+```{r echo = FALSE}
+params$guuid
+```
 
-# Item parameter summmaries
+
+Dataset
+```{r comment = "", echo = FALSE}
+params$dataSet
+```
+
+
+Model
+```{r comment="", echo = FALSE}
+cat(readLines("R-DINA-Non-Hierarchical.jags"), sep = "\n")
+```
+
+# Convergence Diagnostics
+## dHat parameter summaries
+```{r echo = FALSE}
 dHatSummary <- add.summary(sim, vars = c("dHat"))
+dHatSummary
+```
+
+## fHat parameter summaries
+```{r echo = FALSE}
 fHatSummary <- add.summary(sim, vars = c("fHat"))
+fHatSummary
+```
 
+## Geweke diagnostics
+```{r echo = FALSE}
 geweke <- geweke.diag(codaSamples)
+geweke
+```
 
+## Raftery diagnostics
+```{r echo = FALSE}
 raftery <- raftery.diag(codaSamples)[[1]]$resmatrix[1:60,] # I should be less than 5
+raftery
+```
 
-# dHat effective sample sizes
+## dHat effective sample sizes
+```{r echo = FALSE}
 dHatEffectiveSize = matrix(nrow=J, ncol=2) # To Do: Add row.names
-for (j in 1:30){
+for (j in 1:J){
 	dHatEffectiveSize[j,1] <- paste("dHat[", j, "]", sep="")
 	dHatEffectiveSize[j,2] <- effectiveSize(codaSamples[,paste("dHat[", j, "]", sep="")])
 }
+dHatEffectiveSize
+```
 
-# fHat effective sample sizes
+## fHat effective sample sizes
+```{r echo = FALSE}
 fHatEffectiveSize = matrix(nrow=J, ncol=2) # To Do: Add row.names
-for (j in 1:30){
+for (j in 1:J){
 	fHatEffectiveSize[j,1] <- paste("fHat[", j, "]", sep="")
 	fHatEffectiveSize[j,2] <- effectiveSize(codaSamples[,paste("fHat[", j, "]", sep="")])
 }
+fHatEffectiveSize
+```
 
-# Plot convergence diagnostics
-ggmcmc(S, file="dHat.html", plot=c("traceplot", "density", "running", "autocorrelation"), family="dHat", param_page=4)
-ggmcmc(S, file="fHat.html", plot=c("traceplot", "density", "running", "autocorrelation"), family="fHat", param_page=4)
+## Convergence plots
+Creating convergence dHat.html plots
+```{r dHat_convergence, echo = FALSE}
+ggmcmc(S, file="dHat.html", plot=c("traceplot", "density", "autocorrelation"), family="dHat", param_page=4)
+```
 
-# Check rHat plots
-ggs_Rhat(S, family = "dHat", scaling = 1.5)
-ggs_Rhat(S, family = "fHat", scaling = 1.5)
+<!-- Creating convergence fHat.html plots -->
+```{r fHat_convergence, echo = FALSE}
+# ggmcmc(S, file="fHat.html", plot=c("traceplot", "density", "autocorrelation"), family="fHat", param_page=4)
+```
 
+```{r extractPosteriors, echo = FALSE}
 ##############################################################
 # 						  Extract posterior means											 #
 ##############################################################
@@ -77,10 +139,11 @@ fHat <- extractCodaVariables(x=codaSamples, params='fHat', exact=FALSE)
 
 alpha1 <- extractCodaVariables(x=codaSamples, params='alpha1', exact=FALSE)
 alpha2 <- extractCodaVariables(x=codaSamples, params='alpha2', exact=FALSE)
+```
 
-##############################################################################
-#                 Plot dHat discrepencies                                    #
-##############################################################################
+
+# dHat discrepencies
+```{r echo = FALSE}
 
 # Make vector of wanted parameter names
 wanted_pars <- c(paste0("dHat[", 1:J, "]"))
@@ -100,11 +163,10 @@ ggplot(sim_df) + aes(x = parameter, y = middle, ymin = lower, ymax = upper) +
   scale_x_discrete() + geom_abline(intercept = 0, slope = 0, color = "white") +
   geom_linerange() + geom_point(size = 2) + labs(y = "Discrepancy", x = NULL, title = "dHat Sim vs. Predicted Discrepency") +
   theme(panel.grid = element_blank()) + coord_flip()
+```
 
-##############################################################################
-#                 Plot fHat discrepencies                                    #
-##############################################################################
-
+# fHat discrepencies
+```{r echo = FALSE}
 # Make vector of wanted parameter names
 wanted_pars <- c(paste0("fHat[", 1:J, "]"))
 
@@ -123,28 +185,31 @@ ggplot(sim_df) + aes(x = parameter, y = middle, ymin = lower, ymax = upper) +
   scale_x_discrete() + geom_abline(intercept = 0, slope = 0, color = "white") +
   geom_linerange() + geom_point(size = 2) + labs(y = "Discrepancy", x = NULL, title = "fHat Sim vs. Predicted Discrepency") +
   theme(panel.grid = element_blank()) + coord_flip()
+```
 
-##############################################################################
-#                   Check alpha recovery                                     #
-##############################################################################
-
+# Alpha recovery
+``` {r echo = FALSE}
 # Check alpha recovery
 plot(alpha1Sim, alpha1[,1], main = "Alpha1 Recovery")
 abline(a=0,b=1)
 
 plot(alpha2Sim, alpha2[,1], main = "Alpha2 Recovery")
 abline(a=0,b=1)
+```
 
+# Response recovery
+Diff
+``` {r echo = FALSE}
 # Check Prob(response) recovery
 probHat <- boot::inv.logit(fHat + dHat)
 prob <- boot::inv.logit(fSim + dSim)
 
 diff <- (prob - probHat)
 mean(diff[,1])
+```
 
-##############################################################################
-#                 Check guess and slip recovery                              #
-##############################################################################
+# Guess and slip recovery
+```{r echo = FALSE}
 gSim <- boot::inv.logit(fSim)
 sSim <- boot::inv.logit(fSim + dSim)
 
@@ -156,3 +221,4 @@ abline(a = 0, b = 1)
 
 plot(sHat, sSim, main = "Slip simulated vs. predicted" )
 abline(a = 0, b = 1)
+```

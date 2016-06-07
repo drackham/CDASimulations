@@ -1,3 +1,4 @@
+library('dcms')
 library('ggplot2')
 library('ggmcmc')
 library("shinystan")
@@ -6,17 +7,17 @@ library('rstan')
 ##############################################################################
 #													Load the data																			 #
 ##############################################################################
-data(R_DINA_SimpleQ.100)
-dSim <- R_DINA_SimpleQ.100$d
-fSim <- R_DINA_SimpleQ.100$f
+data(R_DINA_SimpleQ_Flat.500)
+dSim <- R_DINA_SimpleQ_Flat.500$d
+fSim <- R_DINA_SimpleQ_Flat.500$f
 
-alpha1Sim <- R_DINA_SimpleQ.100$alphaIK[,1]
-alpha2Sim <- R_DINA_SimpleQ.100$alphaIK[,2]
+alpha1Sim <- R_DINA_SimpleQ_Flat.500$alphaIK[,1]
+alpha2Sim <- R_DINA_SimpleQ_Flat.500$alphaIK[,2]
 
 ##############################################################################
 #                             Summary                                        #
 ##############################################################################
-print(fit)
+print(fit, pars = c("alpha1", "alpha2"), include = FALSE)
 
 ##############################################################################
 #                         Transformations                                    #
@@ -48,7 +49,7 @@ alpha2 <- colMeans(post$alpha2)
 ##############################################################################
 
 # Make vector of wanted parameter names
-wanted_pars <- c(paste0("dHat[", 1:R_DINA_SimpleQ.100$J, "]"))
+wanted_pars <- c(paste0("dHat[", 1:R_DINA_SimpleQ.500$J, "]"))
 
 # Get estimated and generating values for wanted parameters
 generating_values = c(dSim)
@@ -71,7 +72,7 @@ ggplot(sim_df) + aes(x = parameter, y = middle, ymin = lower, ymax = upper) +
 ##############################################################################
 
 # Make vector of wanted parameter names
-wanted_pars <- c(paste0("fHat[", 1:R_DINA_SimpleQ.100$J, "]"))
+wanted_pars <- c(paste0("fHat[", 1:R_DINA_SimpleQ.500$J, "]"))
 
 # Get estimated and generating values for wanted parameters
 generating_values = c(fSim)
