@@ -10,10 +10,10 @@ import os
 def main(compute_box, script_path, script_filename, results_root):
 
   print "Checking for simulations that need to be run..."
-  
+
   # check to see if there are aany simulations without a started_at date scheduled for the given compute_box
   available = Sims_tracker.select().where(Sims_tracker.started_at >> None, Sims_tracker.server == compute_box).count() # http://peewee.readthedocs.io/en/latest/peewee/querying.html#query-operators 
-  
+
   # select all un-analyzed simulations and catch if none available  
   if available > 0:
     for sim in Sims_tracker.select().where(Sims_tracker.started_at >> None, Sims_tracker.server == compute_box):
