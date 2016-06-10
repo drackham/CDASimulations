@@ -22,7 +22,7 @@ class Sims_tracker(BaseModel):
     iter = IntegerField()
     chains = IntegerField()
     started_at = DateTimeField(null=True, default=None)
-    server = CharField(default='sir-thomas')
+    server = CharField(default='sir-thomas', null=True)
     completed_at = DateTimeField(null=True, default=None)
     analyzed = IntegerField(default = 0) # SQLite does not support bool
     notes = BlobField(null=True)
