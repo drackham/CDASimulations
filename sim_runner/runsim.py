@@ -65,10 +65,10 @@ if __name__ == "__main__":
   args = parser.parse_args()
 
   if args.compute_box == 'sir-thomas':
-    script_path = '/home/dave/dev/dcmsims'
+    script_path = '/home/dave/dev/dcmsims/'
     results_root = '/home/dave/dev/Research-Project'
   elif args.compute_box == 'hilbert':
-    script_path = '/home/drackham/dev/dcmsims'
+    script_path = '/home/drackham/dev/dcmsims/'
     results_root = '/home/drackham/Research-Project'
   elif args.compute_box == 'local':
     script_path = '/Users/Dave/dev/dcmsims/'
