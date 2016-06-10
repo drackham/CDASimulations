@@ -9,13 +9,13 @@ library('dcms')
 ##############################################################################
 #                         Load the data                                      #
 ##############################################################################
-data("R_DINA_SimpleQ_Flat.500") # needs to be specified by the simulation tracker...
-dSim <- R_DINA_SimpleQ_Flat.500$d
-fSim <- R_DINA_SimpleQ_Flat.500$f
-J <- R_DINA_SimpleQ_Flat.500$J
+data("R_DINA_SimpleQ.500") # needs to be specified by the simulation tracker...
+dSim <- R_DINA_SimpleQ.500$d
+fSim <- R_DINA_SimpleQ.500$f
+J <- R_DINA_SimpleQ.500$J
 
-alpha1Sim <- R_DINA_SimpleQ_Flat.500$alphaIK[,1]
-alpha2Sim <- R_DINA_SimpleQ_Flat.500$alphaIK[,2]
+alpha1Sim <- R_DINA_SimpleQ.500$alphaIK[,1]
+alpha2Sim <- R_DINA_SimpleQ.500$alphaIK[,2]
 
 ##############################################################################
 #                             Summary                                        #
@@ -156,3 +156,33 @@ abline(a = 0, b = 1)
 
 plot(sHat, sSim, main = "Slip simulated vs. predicted" )
 abline(a = 0, b = 1)
+
+##############################################################################
+#                   Marginal Posterior Analysis                              #
+##############################################################################
+
+# start with means...
+varnames(codaList)
+
+s <- sort(1-boot::inv.logit(fHat[,1] + dHat[,1]))
+g <- sort(boot::inv.logit(fHat[,1]))
+f = function(s, g) { (1-s) * g }
+p_resp = outer(s, g, f)
+p_resp[is.na(z)] = 1
+
+#Perspective Plot
+persp(s,g,p_resp,col="lightblue",main="Perspective Plot",theta=-45, phi=0)
+
+tmp <- as.mcmc(codaSamples)
+tmp[,1]
+
+fChain <- codaSamples[,1:30]
+dChain <- codaSamples[,31:60]
+
+s <- sort(1-boot::inv.logit(tmp[,1] + tmp[,31]))
+g <- sort(boot::inv.logit(tmp[,1]))
+f = function(s, g) { (1-s) * g }
+p_resp = outer(s, g, f)
+
+#Perspective Plot
+persp(s,g,p_resp,col="lightblue",main="Perspective Plot",theta=-45, phi=0)

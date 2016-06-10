@@ -1,9 +1,9 @@
 ---
 title: "R-DINA JAGS SimpleQ Analysis"
 params:
-  dataSet: R_DINA_SimpleQ.500
-  guuid: 0341f357-41d7-4bba-bd02-0278db9e7570
-  simulationDirectory: ~/Dropbox/Graduate/Dissertation/DCM Simulation Results/R-DINA/0341f357-41d7-4bba-bd02-0278db9e7570
+  dataSet: R_DINA_SimpleQ_Poor.500
+  guuid: 2283fe85-9cac-45e4-aab4-7aaba1f215d9
+  simulationDirectory: ~/Dropbox/Graduate/Dissertation/DCM Simulation Results/R-DINA/2283fe85-9cac-45e4-aab4-7aaba1f215d9
 output:
   html_document:
     toc: yes
@@ -18,13 +18,15 @@ knitr::opts_knit$set(root.dir = params$simulationDirectory)
 
 ```{r, message=FALSE, warning=FALSE, results="hide", echo=FALSE}
 # Load R packages
+library('devtools')
+install_github("drackham/dcms", ref="develop")
+library('dcms')
 source("/Users/Dave/dev/EffectiveThetaBIN/Helpers/extractCodaVariables.R")
 library('coda')
 library('ggplot2')
 library('ggmcmc')
 library('parallel')
 library('runjags')
-library('dcms')
 
 ##############################################################################
 #                      Load the simulation                                   #
