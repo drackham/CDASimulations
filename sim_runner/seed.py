@@ -10,7 +10,7 @@ db.create_tables([Sims_tracker])
 Sims_tracker.create(id=-2, type='local test', dataset='R_DINA_SimpleQ.500', model='R-DINA-Non-Hierarchical.jags',
                           N=500, max_cores=1, iter=100, chains=1, server='local')
 
-Sims_tracker.create(id=0, type='sir-thomas test', dataset='R_DINA_SimpleQ.500', model='R-DINA-Non-Hierarchical.jags',
+Sims_tracker.create(id=-1, type='sir-thomas test', dataset='R_DINA_SimpleQ.500', model='R-DINA-Non-Hierarchical.jags',
                           N=50, max_cores=1, iter=100, chains=1, server='sir-thomas')
 
 ########################### Low noise sims ###########################
