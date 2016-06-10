@@ -48,8 +48,8 @@ generateRDINAJagsNonHierachical()
 ptm <- proc.time()
 
 sim <- rDINAJagsSim(data, jagsModel = model,
-                    maxCores = max_cores, adaptSteps = 10, burnInSteps = 10,
-										numSavedSteps = iter, thinSteps = 1)
+                    maxCores = max_cores, adaptSteps = 1000, burnInSteps = 1000,
+										numSavedSteps = iter, thinSteps = 4)
 
 # Stop the timer...
 duration <- proc.time() - ptm
