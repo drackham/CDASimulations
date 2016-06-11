@@ -42,13 +42,3 @@ Sims_tracker.create(id=8, type='Uninformative 200', dataset='R_DINA_SimpleQ_UnIn
 
 Sims_tracker.create(id=9, type='Uninformative 1000', dataset='R_DINA_SimpleQ_UnInform.1000', model='R-DINA-Non-Hierarchical.jags',
                           N=1000, max_cores=4, iter=20000, chains=4, server=None)
-
-########################### Informative sims ###########################
-Sims_tracker.create(id=10, type='Informative 50', dataset='R_DINA_SimpleQ_Inform.50', model='R-DINA-Non-Hierarchical.jags',
-                          N=50, max_cores=4, iter=20000, chains=4, server=None)
-
-Sims_tracker.create(id=11, type='Informative 200', dataset='R_DINA_SimpleQ_Inform.200', model='R-DINA-Non-Hierarchical.jags',
-                          N=200, max_cores=4, iter=20000, chains=4, server=None)
-
-Sims_tracker.create(id=12, type='Informative 1000', dataset='R_DINA_SimpleQ_Inform.1000', model='R-DINA-Non-Hierarchical.jags',
-                          N=1000, max_cores=4, iter=20000, chains=4, server=None)
