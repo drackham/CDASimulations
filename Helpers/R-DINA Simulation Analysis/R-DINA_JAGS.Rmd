@@ -1,19 +1,17 @@
 ---
-title: "R-DINA JAGS SimpleQ Analysis"
+title: "R-DINA JAGS Uninformative 1000 Analysis"
 params:
-  dataSet: R_DINA_SimpleQ_Poor.500
-  guuid: 2283fe85-9cac-45e4-aab4-7aaba1f215d9
-  simulationDirectory: ~/Dropbox/Graduate/Dissertation/DCM Simulation Results/R-DINA/2283fe85-9cac-45e4-aab4-7aaba1f215d9
+  dataSet: R_DINA_SimpleQ_UnInform.1000
+  guuid: 9
+  simulationDirectory: "/Users/Dave/Dropbox/Graduate/Dissertation/DCM-Simulation-Results/Research-Project/9"
 output:
   html_document:
     toc: yes
-  pdf_document:
-    toc: yes
 ---
 
-```{r knitr_opts, include = FALSE}
-knitr::opts_chunk$set(tidy = TRUE, cache = TRUE)
+```{r knitr_opts, echo=TRUE, include=FALSE}
 knitr::opts_knit$set(root.dir = params$simulationDirectory)
+knitr::opts_chunk$set(tidy = TRUE, cache = TRUE)
 ```
 
 ```{r, message=FALSE, warning=FALSE, results="hide", echo=FALSE}
@@ -31,7 +29,7 @@ library('runjags')
 ##############################################################################
 #                      Load the simulation                                   #
 ##############################################################################
-load(paste(params$guuid, "-Sim.RData", sep=''))
+load(paste("Sim.RData", sep=''))
 
 ##############################################################################
 #                         Load the data                                      #

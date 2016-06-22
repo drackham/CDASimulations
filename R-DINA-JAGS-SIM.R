@@ -3,7 +3,6 @@
 library('devtools')
 install_github("drackham/dcms", ref="develop")
 library('dcms')
-library('uuid')
 library('coda')
 library('ggmcmc')
 library('parallel')

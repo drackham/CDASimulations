@@ -5,7 +5,7 @@ import datetime
 
 
 db.connect()
-# db.create_tables([Sims_tracker])
+db.create_tables([Sims_tracker])
 
 # Sims_tracker.create(id=-2, type='local test', dataset='R_DINA_SimpleQ.500', model='R-DINA-Non-Hierarchical.jags',
 #                           N=500, max_cores=1, iter=100, chains=1, server='local')
@@ -34,11 +34,11 @@ db.connect()
 #                           N=1000, max_cores=4, iter=20000, chains=4, server='sir-thomas')
 
 ########################### Uninformative sims ###########################
-# Sims_tracker.create(id=7, type='Uninformative 50', dataset='R_DINA_SimpleQ_UnInform.50', model='R-DINA-Non-Hierarchical.jags',
-#                           N=50, max_cores=4, iter=20000, chains=4, server='sir-thomas')
+Sims_tracker.create(id=7, type='Uninformative 50', dataset='R_DINA_SimpleQ_UnInform.50', model='R-DINA-Non-Hierarchical.jags',
+                          N=50, max_cores=4, iter=20000, chains=4, server='sir-thomas')
 
-# Sims_tracker.create(id=8, type='Uninformative 200', dataset='R_DINA_SimpleQ_UnInform.200', model='R-DINA-Non-Hierarchical.jags',
-#                           N=200, max_cores=4, iter=20000, chains=4, server='sir-thomas')
+Sims_tracker.create(id=8, type='Uninformative 200', dataset='R_DINA_SimpleQ_UnInform.200', model='R-DINA-Non-Hierarchical.jags',
+                          N=200, max_cores=4, iter=20000, chains=4, server='sir-thomas')
 
-# Sims_tracker.create(id=9, type='Uninformative 1000', dataset='R_DINA_SimpleQ_UnInform.1000', model='R-DINA-Non-Hierarchical.jags',
-#                           N=1000, max_cores=4, iter=20000, chains=4, server='sir-thomas')
+Sims_tracker.create(id=9, type='Uninformative 1000', dataset='R_DINA_SimpleQ_UnInform.1000', model='R-DINA-Non-Hierarchical.jags',
+                          N=1000, max_cores=4, iter=20000, chains=4, server='sir-thomas')
